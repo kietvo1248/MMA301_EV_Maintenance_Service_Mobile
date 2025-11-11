@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 import {
   View,
@@ -7,6 +8,8 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { useAuth } from '../context/AuthContext';
+
 
 const HomeScreen = ({ navigation }) => {
   const menuItems = [
@@ -18,12 +21,23 @@ const HomeScreen = ({ navigation }) => {
     { id: 6, title: 'Đăng xuất', icon: '🚪', color: '#e67e22' },
   ];
 
+  const { logout } = useAuth();
+
   const handleMenuPress = (item) => {
-    if (item.title === 'Đăng xuất') {
-      navigation.replace('Login');
-    } else {
-      // TODO(stagewise): Navigate to respective screens
-      console.log(`Pressed: ${item.title}`);
+  if (item.title === 'Đăng xuất') {
+    handleLogout(); // Gọi hàm logout
+  } else {
+    // TODO(stagewise): Navigate to respective screens
+    console.log(`Pressed: ${item.title}`);
+  }
+};
+
+const handleLogout = async () => {
+    try {
+      await logout(); // ← Context tự cập nhật user = null
+      // RootNavigator tự chuyển về LoginScreen
+    } catch (error) {
+      console.warn('Lỗi logout:', error);
     }
   };
 
