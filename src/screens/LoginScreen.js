@@ -73,7 +73,7 @@ const LoginScreen = ({ navigation }) => {
         [
           {
             text: 'OK',
-          
+
           },
         ]
       );
@@ -83,7 +83,16 @@ const LoginScreen = ({ navigation }) => {
         error.message ||
         'Email hoặc mật khẩu không đúng';
 
-      Alert.alert('Đăng nhập thất bại', message);
+      Alert.alert(
+        'Đăng nhập thành công!',
+        `Chào mừng ${user.name || user.email} - ${user.role}`,
+        [
+          {
+            text: 'OK',
+            onPress: () => console.log("Navigating...")
+          }
+        ]
+      )
     } finally {
       setLoading(false);
     }
