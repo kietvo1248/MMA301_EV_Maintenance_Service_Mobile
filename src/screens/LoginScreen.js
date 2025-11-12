@@ -89,10 +89,16 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-  // Hàm điền demo (giữ lại để test nhanh)
+  // Hàm điền demo cho nhân viên
   const fillDemoCredentials = () => {
     setEmail('staff.hcm@evservice.com');
     setPassword('staff123');
+  };
+
+  // Hàm điền demo cho khách hàng
+  const fillDemoCustomerCredentials = () => {
+    setEmail('customer1@example.com');
+    setPassword('customer123');
   };
 
   return (
@@ -160,15 +166,20 @@ const LoginScreen = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
 
-            {/* Nút demo (chỉ để dev) */}
+            {/* Nút demo cho nhân viên */}
             <TouchableOpacity style={styles.demoButton} onPress={fillDemoCredentials}>
-              <Text style={styles.demoButtonText}>Điền thông tin demo</Text>
+              <Text style={styles.demoButtonText}>Điền thông tin demo nhân viên</Text>
+            </TouchableOpacity>
+
+            {/* Nút demo cho khách hàng */}
+            <TouchableOpacity style={styles.demoButton} onPress={fillDemoCustomerCredentials}>
+              <Text style={styles.demoButtonText}>Điền thông tin demo khách hàng</Text>
             </TouchableOpacity>
 
             <View style={styles.demoInfo}>
               <Text style={styles.demoInfoTitle}>Demo (dev only):</Text>
-              <Text style={styles.demoInfoText}>Email: staff.hcm@evservice.com</Text>
-              <Text style={styles.demoInfoText}>Pass: staff123</Text>
+              <Text style={styles.demoInfoText}>Nhân viên: staff.hcm@evservice.com / staff123</Text>
+              <Text style={styles.demoInfoText}>Khách hàng: customer1@example.com / customer123</Text>
             </View>
           </View>
         </ScrollView>
