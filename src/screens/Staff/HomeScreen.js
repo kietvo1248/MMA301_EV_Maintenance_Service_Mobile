@@ -13,26 +13,26 @@ import { useAuth } from '../../context/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
   const menuItems = [
-    { id: 1, title: 'Danh sách xe điện', icon: '🚗', color: '#3498db' },
-    { id: 2, title: 'Lịch bảo dưỡng', icon: '📅', color: '#e74c3c' },
-    { id: 3, title: 'Báo cáo', icon: '📊', color: '#f39c12' },
-    { id: 4, title: 'Khách hàng', icon: '👥', color: '#9b59b6' },
-    { id: 5, title: 'Cài đặt', icon: '⚙️', color: '#34495e' },
-    { id: 6, title: 'Đăng xuất', icon: '🚪', color: '#e67e22' },
+    { id: 1, title: 'Lịch bảo dưỡng', icon: '📅', color: '#e74c3c' },
+    { id: 2, title: 'Kĩ thuật viên', icon: '👥', color: '#9b59b6' },
+    { id: 3, title: 'Kiểm tra khách hàng', icon: '👥', color: '#9b59b6' },
+    { id: 4, title: 'Đăng xuất', icon: '🚪', color: '#e67e22' },
   ];
 
   const { logout } = useAuth();
 
   const handleMenuPress = (item) => {
-  if (item.title === 'Đăng xuất') {
-    handleLogout(); // Gọi hàm logout
-  } else {
-    // TODO(stagewise): Navigate to respective screens
-    console.log(`Pressed: ${item.title}`);
-  }
-};
+    if (item.title === 'Đăng xuất') {
+      handleLogout(); // Gọi hàm logout
+    } else if (item.title === 'Lịch bảo dưỡng') {
+      navigation.navigate('Appointments');
+    } else {
+      // TODO(stagewise): Navigate to respective screens
+      console.log(`Pressed: ${item.title}`);
+    }
+  };
 
-const handleLogout = async () => {
+  const handleLogout = async () => {
     try {
       await logout(); // ← Context tự cập nhật user = null
       // RootNavigator tự chuyển về LoginScreen
@@ -63,27 +63,7 @@ const handleLogout = async () => {
           ))}
         </View>
 
-        <View style={styles.statsContainer}>
-          <Text style={styles.statsTitle}>Thống kê hôm nay</Text>
-          <View style={styles.statsGrid}>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>12</Text>
-              <Text style={styles.statLabel}>Xe đang bảo dưỡng</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>8</Text>
-              <Text style={styles.statLabel}>Xe hoàn thành</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>3</Text>
-              <Text style={styles.statLabel}>Xe chờ phụ tụng</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>5</Text>
-              <Text style={styles.statLabel}>Lịch hẹn mới</Text>
-            </View>
-          </View>
-        </View>
+
       </ScrollView>
     </SafeAreaView>
   );

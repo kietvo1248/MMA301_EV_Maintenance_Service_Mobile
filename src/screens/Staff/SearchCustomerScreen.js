@@ -450,12 +450,13 @@ const SearchCustomerScreen = ({ navigation }) => {
   const renderVehicle = ({ item }) => (
     <TouchableOpacity
       style={styles.vehicleCard}
-      // onPress={() =>
-      //   navigation.navigate('CreateAppointment', {
-      //     customer,
-      //     selectedVehicle: item,
-      //   })
-      // }
+      onPress={() => {
+       
+        navigation.navigate('VehicleDetail', {
+          vehicleId: item.id,
+          customer: customer,
+        });
+      }}
     >
       <Text style={styles.vehicleTitle}>
         {item.brand} - {item.model}
@@ -616,7 +617,7 @@ const SearchCustomerScreen = ({ navigation }) => {
                     style={styles.createApptBtn}
                     onPress={openWalkInModal}
                   >
-                    <Text style={styles.createApptBtnText}>Check-in ngay (Walk-in)</Text>
+                    <Text style={styles.createApptBtnText}>Tạo lịch hẹn ngay</Text>
                   </TouchableOpacity>
                 </View>
               )}

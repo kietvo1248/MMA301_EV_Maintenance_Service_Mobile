@@ -91,7 +91,7 @@ const LoginScreen = ({ navigation }) => {
 
   // Hàm điền demo (giữ lại để test nhanh)
   const fillDemoCredentials = () => {
-    setEmail('staff.hcm@evservice.com');
+    setEmail('staff.hn@evservice.com');
     setPassword('staff123');
   };
 
@@ -167,7 +167,7 @@ const LoginScreen = ({ navigation }) => {
 
             <View style={styles.demoInfo}>
               <Text style={styles.demoInfoTitle}>Demo (dev only):</Text>
-              <Text style={styles.demoInfoText}>Email: staff.hcm@evservice.com</Text>
+              <Text style={styles.demoInfoText}>Email: staff.hn@evservice.com</Text>
               <Text style={styles.demoInfoText}>Pass: staff123</Text>
             </View>
           </View>
