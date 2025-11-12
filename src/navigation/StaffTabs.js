@@ -7,11 +7,13 @@ import { Ionicons } from '@expo/vector-icons';
 import HomeScreen from '../screens/Staff/HomeScreen';
 import TechnicianListScreen from '../screens/Staff/TechnicianListScreen';
 import AppointmentScreen from '../screens/Staff/AppointmentScreen';
-import AppointmentDetailScreen from '../screens/Staff/AppointmentDetailScreen'; // ← IMPORT
+import AppointmentDetailScreen from '../screens/Staff/AppointmentDetailScreen';
 import SearchCustomerScreen from '../screens/Staff/SearchCustomerScreen';
+import VehicleDetailScreen from '../screens/Staff/VehicleDetailScreen'; // ← CHỈ IMPORT VehicleDetailScreen
 
 const Tab = createBottomTabNavigator();
-const AppointmentStack = createNativeStackNavigator(); // ← TẠO STACK RIÊNG
+const AppointmentStack = createNativeStackNavigator();
+const SearchCustomerStack = createNativeStackNavigator(); // ← STACK CHO SEARCH CUSTOMER
 
 // Stack riêng cho Appointments
 function AppointmentStackScreen() {
@@ -34,6 +36,35 @@ function AppointmentStackScreen() {
                 options={{ title: 'Chi tiết lịch hẹn' }}
             />
         </AppointmentStack.Navigator>
+    );
+}
+
+// Stack riêng cho Search Customer
+function SearchCustomerStackScreen() {
+    return (
+        <SearchCustomerStack.Navigator
+            screenOptions={{
+                headerStyle: { backgroundColor: '#27ae60' },
+                headerTintColor: '#fff',
+                headerTitleStyle: { fontWeight: 'bold' },
+            }}
+        >
+            <SearchCustomerStack.Screen
+                name="SearchCustomerMain"
+                component={SearchCustomerScreen}
+                options={{ title: 'Tìm khách hàng' }}
+            />
+            <SearchCustomerStack.Screen
+                name="VehicleDetail"
+                component={VehicleDetailScreen}
+                options={{ title: 'Chi tiết xe' }}
+            />
+            <AppointmentStack.Screen
+                name="AppointmentDetail"
+                component={AppointmentDetailScreen}
+                options={{ title: 'Chi tiết lịch hẹn' }}
+            />
+        </SearchCustomerStack.Navigator>
     );
 }
 
@@ -68,19 +99,20 @@ export default function StaffTabs() {
             {/* DÙNG STACK CHO APPOINTMENTS */}
             <Tab.Screen
                 name="Appointments"
-                component={AppointmentStackScreen} // ← DÙNG STACK
+                component={AppointmentStackScreen}
                 options={{
-                    headerShown: false, // Ẩn header của Tab
+                    headerShown: false,
                     tabBarLabel: 'Lịch hẹn',
                     tabBarIcon: ({ color, size }) => <Ionicons name="calendar-outline" size={size} color={color} />,
                 }}
             />
 
+            {/* DÙNG STACK CHO SEARCH CUSTOMER */}
             <Tab.Screen
                 name="SearchCustomer"
-                component={SearchCustomerScreen}
+                component={SearchCustomerStackScreen}
                 options={{
-                    title: 'Khách hàng',
+                    headerShown: false,
                     tabBarLabel: 'Tìm khách hàng',
                     tabBarIcon: ({ color, size }) => <Ionicons name="search-outline" size={size} color={color} />,
                 }}
