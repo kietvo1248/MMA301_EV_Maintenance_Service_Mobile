@@ -14,18 +14,18 @@ export default function TechnicianTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#27ae60',
+        tabBarActiveTintColor: '#2e7fe9ff',
         tabBarInactiveTintColor: 'gray',
-        headerShown: false, // ẩn header vì stack con sẽ có header riêng
+        headerShown: false, 
       }}
     >
       <Tab.Screen
         name="TechHome"
         component={TechnicianHomeScreen}
         options={{
-          title: 'Lịch làm việc',
+          title: 'Tổng quan',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" size={size} color={color} />
+            <Ionicons name="home-outline" size={size} color={color} />
           ),
         }}
       />

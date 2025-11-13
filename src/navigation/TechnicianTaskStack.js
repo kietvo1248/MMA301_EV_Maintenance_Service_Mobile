@@ -13,7 +13,7 @@ export default function TechnicianTaskStack() {
         component={TechnicianTasksScreen}
         options={{
           title: "Công việc của tôi",
-          headerShown: true,
+          headerShown: false,
         }}
       />
       <Stack.Screen

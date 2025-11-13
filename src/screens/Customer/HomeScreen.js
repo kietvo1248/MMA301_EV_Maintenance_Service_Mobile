@@ -10,31 +10,36 @@ import {
 } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 
-
 const HomeScreen = ({ navigation }) => {
   const menuItems = [
-    { id: 1, title: 'Lịch bảo dưỡng', icon: '📅', color: '#e74c3c' },
-    { id: 2, title: 'Kĩ thuật viên', icon: '👥', color: '#9b59b6' },
-    { id: 3, title: 'Kiểm tra khách hàng', icon: '👥', color: '#9b59b6' },
-    { id: 4, title: 'Đăng xuất', icon: '🚪', color: '#e67e22' },
+    { id: 1, title: 'Quản lý xe', icon: '🚗', color: '#3498db' },
+    { id: 2, title: 'Đặt lịch', icon: '📅', color: '#e74c3c' },
+    { id: 3, title: 'Lịch sử bảo dưỡng', icon: '📋', color: '#f39c12' },
+    { id: 4, title: 'Tài khoản', icon: '👤', color: '#34495e' },
+    { id: 5, title: 'Đăng xuất', icon: '🚪', color: '#e67e22' },
+    { id: 6, title: 'Lịch sử lịch hẹn', icon: '📄', color: '#1abc9c' },
   ];
 
   const { logout } = useAuth();
 
   const handleMenuPress = (item) => {
     if (item.title === 'Đăng xuất') {
-      handleLogout(); // Gọi hàm logout
-    } else if (item.title === 'Lịch bảo dưỡng') {
-      navigation.navigate('Appointments');
+      handleLogout();
+    } else if (item.title === 'Quản lý xe') {
+      navigation.navigate('VehicleManagement');
+    } else if (item.title === 'Đặt lịch') {
+      navigation.navigate('BookAppointmentStack', { screen: 'BookAppointmentMain' });
+    } else if (item.title === 'Lịch sử lịch hẹn') {
+      // ✅ Chuyển đến màn hình lịch sử, user sẽ chọn lịch hẹn muốn xem chi tiết
+      navigation.navigate('AppointmentStack', { screen: 'AppointmentHistory' });
     } else {
-      // TODO(stagewise): Navigate to respective screens
       console.log(`Pressed: ${item.title}`);
     }
   };
 
   const handleLogout = async () => {
     try {
-      await logout(); // ← Context tự cập nhật user = null
+      await logout();
       // RootNavigator tự chuyển về LoginScreen
     } catch (error) {
       console.warn('Lỗi logout:', error);
@@ -44,26 +49,29 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.header}>
-          <Text style={styles.welcomeText}>Chào mừng đến với</Text>
-          <Text style={styles.appName}>EV Maintenance System</Text>
-          <Text style={styles.subtitle}>Hệ thống quản lý bảo dưỡng xe điện</Text>
+        <View style={styles.contentContainer}>
+          
+          {/* Welcome Section */}
+          <View style={styles.welcomeSection}>
+            <Text style={styles.welcomeText}>Chào mừng quý khách</Text>
+            <Text style={styles.appName}>EV Maintenance System</Text>
+            <Text style={styles.subtitle}>Dịch vụ bảo dưỡng xe điện chuyên nghiệp</Text>
+          </View>
+
+          <View style={styles.menuGrid}>
+            {menuItems.map((item) => (
+              <TouchableOpacity
+                key={item.id}
+                style={[styles.menuItem, { backgroundColor: item.color }]}
+                onPress={() => handleMenuPress(item)}
+              >
+                <Text style={styles.menuIcon}>{item.icon}</Text>
+                <Text style={styles.menuTitle}>{item.title}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
         </View>
-
-        <View style={styles.menuGrid}>
-          {menuItems.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              style={[styles.menuItem, { backgroundColor: item.color }]}
-              onPress={() => handleMenuPress(item)}
-            >
-              <Text style={styles.menuIcon}>{item.icon}</Text>
-              <Text style={styles.menuTitle}>{item.title}</Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-
       </ScrollView>
     </SafeAreaView>
   );
@@ -78,7 +86,10 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     padding: 20,
   },
-  header: {
+  contentContainer: {
+    flex: 1,
+  },
+  welcomeSection: {
     alignItems: 'center',
     marginBottom: 30,
     paddingVertical: 20,
@@ -101,7 +112,7 @@ const styles = StyleSheet.create({
   appName: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#27ae60',
+    color: '#3498db',
     marginBottom: 5,
   },
   subtitle: {
@@ -177,7 +188,7 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#27ae60',
+    color: '#3498db',
     marginBottom: 5,
   },
   statLabel: {
