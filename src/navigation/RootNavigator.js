@@ -3,11 +3,15 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { View, ActivityIndicator, Text } from 'react-native';
 import { useAuth } from '../context/AuthContext';
+
 import LoginScreen from '../screens/LoginScreen';
-import HomeTabs from './HomeTabs';
+import StaffTabs from './StaffTabs';
+import TechnicianTabs from './TechnicianTabs';
+import CustomerTabs from './CustomerTabs';
+
 
 export default function RootNavigator() {
-  const { user, loading } = useAuth(); // ← LẤY user TỪ CONTEXT
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (
@@ -20,7 +24,10 @@ export default function RootNavigator() {
 
   return (
     <NavigationContainer>
-      {user ? <HomeTabs role={user.role} /> : <LoginScreen />}
+      {!user && <LoginScreen />}
+      {user && user.role === 'STAFF' && <StaffTabs />}
+      {user && user.role === 'TECHNICIAN' && <TechnicianTabs />}
+      {user && user.role === 'CUSTOMER' && <CustomerTabs />}
     </NavigationContainer>
   );
 }

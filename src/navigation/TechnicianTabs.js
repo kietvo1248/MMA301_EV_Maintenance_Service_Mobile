@@ -2,7 +2,11 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+
 import TechnicianHomeScreen from '../screens/Technician/HomeScreen';
+import TechnicianProfileScreen from '../screens/Technician/TechnicianProfileScreen';
+import TechnicianTaskStack from './TechnicianTaskStack';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -10,39 +14,41 @@ export default function TechnicianTabs() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: '#27ae60',
+        tabBarActiveTintColor: '#2e7fe9ff',
         tabBarInactiveTintColor: 'gray',
-        tabBarStyle: { backgroundColor: 'white', borderTopWidth: 1, borderTopColor: '#f0f0f0' },
-        headerStyle: { backgroundColor: '#27ae60' },
-        headerTintColor: '#fff',
-        headerTitleStyle: { fontWeight: 'bold' },
+        headerShown: false, 
       }}
     >
       <Tab.Screen
         name="TechHome"
         component={TechnicianHomeScreen}
         options={{
-          title: 'Lịch làm việc',
-          tabBarLabel: 'Lịch',
-          tabBarIcon: ({ color, size }) => <Ionicons name="calendar-outline" size={size} color={color} />,
+          title: 'Tổng quan',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home-outline" size={size} color={color} />
+          ),
         }}
       />
+
       <Tab.Screen
         name="TechTasks"
-        component={TechnicianHomeScreen}
+        component={TechnicianTaskStack} 
         options={{
           title: 'Công việc',
-          tabBarLabel: 'Công việc',
-          tabBarIcon: ({ color, size }) => <Ionicons name="briefcase-outline" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="briefcase-outline" size={size} color={color} />
+          ),
         }}
       />
+
       <Tab.Screen
         name="TechProfile"
-        component={TechnicianHomeScreen}
+        component={TechnicianProfileScreen}
         options={{
-          title: 'Hồ sơ',
-          tabBarLabel: 'Tôi',
-          tabBarIcon: ({ color, size }) => <Ionicons name="person-outline" size={size} color={color} />,
+          title: 'Tôi',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-outline" size={size} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>

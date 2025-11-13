@@ -2,10 +2,17 @@
 // src/context/AuthContext.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import api, { setAuthLogoutCallback } from '../config/api'; // ← import hàm
+import api, { setAuthLogoutCallback } from '../config/api'; 
 import { Alert } from 'react-native';
 
-const AuthContext = createContext();
+const AuthContext = createContext({
+  user: null,
+  loading: true,
+  loginAuth: () => { },
+  logout: () => { },
+  reload: () => { }
+});
+
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);

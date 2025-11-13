@@ -73,7 +73,7 @@ const LoginScreen = ({ navigation }) => {
         [
           {
             text: 'OK',
-          
+
           },
         ]
       );
@@ -83,14 +83,23 @@ const LoginScreen = ({ navigation }) => {
         error.message ||
         'Email hoặc mật khẩu không đúng';
 
-      Alert.alert('Đăng nhập thất bại', message);
+      Alert.alert(
+        'Đăng nhập thành công!',
+        `Chào mừng ${user.name || user.email} - ${user.role}`,
+        [
+          {
+            text: 'OK',
+            onPress: () => console.log("Navigating...")
+          }
+        ]
+      )
     } finally {
       setLoading(false);
     }
   };
 
   // Hàm điền demo cho nhân viên
-  const fillDemoCredentials = () => {
+  const fillDemoStaffCredentials = () => {
     setEmail('staff.hn@evservice.com');
     setPassword('staff123');
   };
@@ -99,6 +108,12 @@ const LoginScreen = ({ navigation }) => {
   const fillDemoCustomerCredentials = () => {
     setEmail('customer1@example.com');
     setPassword('customer123');
+  };
+
+  // Hàm điền demo cho kỹ thuật viên
+  const fillDemoTechnicianCredentials = () => {
+    setEmail('tech.hn@evservice.com');
+    setPassword('tech123');
   };
 
   return (
@@ -167,7 +182,7 @@ const LoginScreen = ({ navigation }) => {
             </TouchableOpacity>
 
             {/* Nút demo cho nhân viên */}
-            <TouchableOpacity style={styles.demoButton} onPress={fillDemoCredentials}>
+            <TouchableOpacity style={styles.demoButton} onPress={fillDemoStaffCredentials}>
               <Text style={styles.demoButtonText}>Điền thông tin demo nhân viên</Text>
             </TouchableOpacity>
 
@@ -176,11 +191,16 @@ const LoginScreen = ({ navigation }) => {
               <Text style={styles.demoButtonText}>Điền thông tin demo khách hàng</Text>
             </TouchableOpacity>
 
-            <View style={styles.demoInfo}>
+            {/* Nút demo cho kĩ thuật viên */}
+            <TouchableOpacity style={styles.demoButton} onPress={fillDemoTechnicianCredentials}>
+              <Text style={styles.demoButtonText}>Điền thông tin demo kĩ thuật viên</Text>
+            </TouchableOpacity>
+
+            {/* <View style={styles.demoInfo}>
               <Text style={styles.demoInfoTitle}>Demo (dev only):</Text>
               <Text style={styles.demoInfoText}>Email: staff.hn@evservice.com</Text>
               <Text style={styles.demoInfoText}>Pass: staff123</Text>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
