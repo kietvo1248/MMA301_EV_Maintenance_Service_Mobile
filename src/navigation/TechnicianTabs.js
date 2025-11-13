@@ -4,8 +4,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 
 import TechnicianHomeScreen from '../screens/Technician/HomeScreen';
-import TechnicianTasksScreen from '../screens/Technician/TasksScreen';
-import TechnicianProfileScreen from '../screens/Technician/ProfileScreen';
+import TechnicianProfileScreen from '../screens/Technician/TechnicianProfileScreen';
+import TechnicianTaskStack from './TechnicianTaskStack';
+
 
 const Tab = createBottomTabNavigator();
 
@@ -14,7 +15,8 @@ export default function TechnicianTabs() {
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: '#27ae60',
-        tabBarInactiveTintColor: 'gray'
+        tabBarInactiveTintColor: 'gray',
+        headerShown: false, // ẩn header vì stack con sẽ có header riêng
       }}
     >
       <Tab.Screen
@@ -24,18 +26,18 @@ export default function TechnicianTabs() {
           title: 'Lịch làm việc',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar-outline" size={size} color={color} />
-          )
+          ),
         }}
       />
 
       <Tab.Screen
         name="TechTasks"
-        component={TechnicianTasksScreen}
+        component={TechnicianTaskStack} 
         options={{
           title: 'Công việc',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="briefcase-outline" size={size} color={color} />
-          )
+          ),
         }}
       />
 
@@ -46,7 +48,7 @@ export default function TechnicianTabs() {
           title: 'Tôi',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="person-outline" size={size} color={color} />
-          )
+          ),
         }}
       />
     </Tab.Navigator>

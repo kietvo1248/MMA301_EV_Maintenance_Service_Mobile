@@ -139,6 +139,20 @@ export const createCustomer = async ({ fullName, phoneNumber, email }) => {
   }
 };
 
+//GET: Lấy danh sách xe của khách hàng
+export const getCustomerVehicles = async (customerId) => {
+  if (!customerId) {
+    throw new Error('customerId là bắt buộc');
+  }
+  try {
+    const response = await api.get(`/staff/customers/${customerId}/vehicles`);
+    return response.data; // Mảng xe
+  } catch (error) {
+    console.error('Lỗi lấy danh sách xe của khách hàng:', error);
+    throw error;
+  }
+};
+
 /**
  * Thêm xe mới cho khách hàng (Walk-in)
  * @param {string} customerId - ID khách hàng (uuid)
@@ -279,7 +293,7 @@ export const createWalkInAppointment = async ({
 
   try {
     const response = await api.post('/staff/appointments/create-walk-in', payload);
-    return response.data.data; // { appointment, serviceRecord }
+    return response.data; // { appointment, serviceRecord }
   } catch (error) {
     console.error('Lỗi tạo Walk-in:', error.response?.data);
     const msg = error.response?.data?.message || 'Không thể tạo lịch hẹn Walk-in';

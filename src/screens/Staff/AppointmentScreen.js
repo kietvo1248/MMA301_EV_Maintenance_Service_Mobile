@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   View,
   Text,
@@ -18,7 +18,7 @@ import {
   APPOINTMENT_STATUS,
   getTechnicians,
   confirmAppointment,
-  startAppointment, // ← IMPORT
+  startAppointment,
 } from '../../services/Staff/staffService';
 
 const AppointmentScreen = ({ navigation }) => {
@@ -38,6 +38,86 @@ const AppointmentScreen = ({ navigation }) => {
   // Modal bắt đầu dịch vụ
   const [startModalVisible, setStartModalVisible] = useState(false);
   const [mileageInput, setMileageInput] = useState('');
+
+  // === TỰ ĐỘNG FETCH KHI VÀO MÀN HÌNH ===
+  useEffect(() => {
+    const initializeData = async () => {
+      setLoading(true);
+      try {
+        if (selectedStatus === 'ALL') {
+          const results = await Promise.all(
+            Object.keys(APPOINTMENT_STATUS).map(status => fetchAndCache(status))
+          );
+          const newCache = Object.fromEntries(
+            Object.keys(APPOINTMENT_STATUS).map((key, i) => [key, results[i]])
+          );
+          setCache(newCache);
+        } else if (!cache[selectedStatus]) {
+          await fetchAndCache(selectedStatus);
+        }
+      } catch (error) {
+        Alert.alert('Lỗi', 'Không thể tải dữ liệu ban đầu');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeData();
+  }, []); // ← Chỉ chạy 1 lần khi mount
+
+  // === TÍNH TOÁN ALL APPOINTMENTS ===
+  const allAppointments = useMemo(() => {
+    return Object.values(cache).flat();
+  }, [cache]);
+
+  // === CẬP NHẬT DANH SÁCH KHI CACHE HOẶC STATUS THAY ĐỔI ===
+  useEffect(() => {
+    if (selectedStatus === 'ALL') {
+      setAppointments(allAppointments);
+    } else {
+      const data = cache[selectedStatus];
+      if (data) {
+        setAppointments(data);
+      } else {
+        fetchAndCache(selectedStatus).then(setAppointments);
+      }
+    }
+  }, [selectedStatus, allAppointments]);
+
+  // === FETCH + CACHE ===
+  const fetchAndCache = async (status, isRefresh = false) => {
+    if (!isRefresh && cache[status]) return cache[status];
+
+    const setLoadingFn = isRefresh ? setRefreshing : setLoading;
+    setLoadingFn(true);
+
+    try {
+      const data = await getAppointments(status);
+      setCache(prev => ({ ...prev, [status]: data }));
+      return data;
+    } catch (error) {
+      Alert.alert('Lỗi', 'Không thể tải dữ liệu');
+      return [];
+    } finally {
+      setLoadingFn(false);
+    }
+  };
+
+  // === REFRESH ===
+  const onRefresh = useCallback(() => {
+    setCache({});
+    if (selectedStatus === 'ALL') {
+      Promise.all(Object.keys(APPOINTMENT_STATUS).map(s => fetchAndCache(s, true)))
+        .then(results => {
+          const newCache = Object.fromEntries(
+            Object.keys(APPOINTMENT_STATUS).map((k, i) => [k, results[i]])
+          );
+          setCache(newCache);
+        });
+    } else {
+      fetchAndCache(selectedStatus, true).then(setAppointments);
+    }
+  }, [selectedStatus]);
 
   // === MỞ MODAL PHÂN CÔNG ===
   const openAssignModal = async (appointment) => {
@@ -103,49 +183,6 @@ const AppointmentScreen = ({ navigation }) => {
       setAppointments(prev => prev.filter(a => a.id !== id));
     }
   };
-
-  // === LOAD APPOINTMENTS ===
-  const fetchAndCache = async (status, isRefresh = false) => {
-    if (cache[status] && !isRefresh) return cache[status];
-    if (!isRefresh) setLoading(true);
-    else setRefreshing(true);
-    try {
-      const data = await getAppointments(status);
-      setCache(prev => ({ ...prev, [status]: data }));
-      return data;
-    } catch (error) {
-      Alert.alert('Lỗi', 'Không thể tải dữ liệu');
-      return [];
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
-
-  useEffect(() => {
-    if (selectedStatus === 'ALL') {
-      setAppointments(Object.values(cache).flat());
-    } else {
-      fetchAndCache(selectedStatus).then(setAppointments);
-    }
-  }, [selectedStatus]);
-
-  const onRefresh = useCallback(() => {
-    setCache({});
-    if (selectedStatus === 'ALL') {
-      Promise.all(Object.values(APPOINTMENT_STATUS).map(s => fetchAndCache(s, true)))
-        .then(results => {
-          const all = results.flat();
-          setAppointments(all);
-          const newCache = Object.fromEntries(
-            Object.keys(APPOINTMENT_STATUS).map((k, i) => [k, results[i]])
-          );
-          setCache(newCache);
-        });
-    } else {
-      fetchAndCache(selectedStatus, true).then(setAppointments);
-    }
-  }, [selectedStatus]);
 
   const formatDate = (isoString) => {
     return new Date(isoString).toLocaleString('vi-VN', {
@@ -256,7 +293,7 @@ const AppointmentScreen = ({ navigation }) => {
       </View>
 
       {/* Danh sách */}
-      {loading ? (
+      {loading && Object.keys(cache).length === 0 ? (
         <View style={styles.center}>
           <ActivityIndicator size="large" color="#27ae60" />
           <Text style={styles.loadingText}>Đang tải...</Text>
