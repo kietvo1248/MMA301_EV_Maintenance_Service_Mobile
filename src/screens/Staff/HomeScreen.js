@@ -8,36 +8,55 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { Ionicons, MaterialIcons, FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
-
 
 const HomeScreen = ({ navigation }) => {
   const menuItems = [
-    { id: 1, title: 'Lịch bảo dưỡng', icon: '📅', color: '#e74c3c' },
-    { id: 2, title: 'Kĩ thuật viên', icon: '👥', color: '#9b59b6' },
-    { id: 3, title: 'Kiểm tra khách hàng', icon: '👥', color: '#9b59b6' },
-    { id: 4, title: 'Đăng xuất', icon: '🚪', color: '#e67e22' },
+    { id: 1, title: 'Lịch bảo dưỡng', icon: 'calendar', iconSet: 'FontAwesome', color: '#e74c3c' },
+    { id: 2, title: 'Kĩ thuật viên', icon: 'people', iconSet: 'Ionicons', color: '#9b59b6' },
+    { id: 3, title: 'Kiểm tra khách hàng', icon: 'account-check', iconSet: 'MaterialCommunityIcons', color: '#9b59b6' },
+    { id: 4, title: 'Đăng xuất', icon: 'logout', iconSet: 'MaterialIcons', color: '#e67e22' },
   ];
 
   const { logout } = useAuth();
 
   const handleMenuPress = (item) => {
     if (item.title === 'Đăng xuất') {
-      handleLogout(); // Gọi hàm logout
+      handleLogout();
     } else if (item.title === 'Lịch bảo dưỡng') {
       navigation.navigate('Appointments');
+    } else if (item.title === 'Kĩ thuật viên') {
+      navigation.navigate('Technicians');
+    } else if (item.title === 'Kiểm tra khách hàng') {
+      navigation.navigate('SearchCustomer');
     } else {
-      // TODO(stagewise): Navigate to respective screens
       console.log(`Pressed: ${item.title}`);
     }
   };
 
   const handleLogout = async () => {
     try {
-      await logout(); // ← Context tự cập nhật user = null
-      // RootNavigator tự chuyển về LoginScreen
+      await logout();
     } catch (error) {
       console.warn('Lỗi logout:', error);
+    }
+  };
+
+  const renderIcon = (iconSet, icon, color) => {
+    const iconProps = { size: 32, color: '#ffffff' };
+
+    switch (iconSet) {
+      case 'Ionicons':
+        return <Ionicons name={icon} {...iconProps} />;
+      case 'MaterialIcons':
+        return <MaterialIcons name={icon} {...iconProps} />;
+      case 'FontAwesome':
+        return <FontAwesome name={icon} {...iconProps} />;
+      case 'MaterialCommunityIcons':
+        return <MaterialCommunityIcons name={icon} {...iconProps} />;
+      default:
+        return <Ionicons name="help-circle" {...iconProps} />;
     }
   };
 
@@ -57,12 +76,11 @@ const HomeScreen = ({ navigation }) => {
               style={[styles.menuItem, { backgroundColor: item.color }]}
               onPress={() => handleMenuPress(item)}
             >
-              <Text style={styles.menuIcon}>{item.icon}</Text>
+              {renderIcon(item.iconSet, item.icon, item.color)}
               <Text style={styles.menuTitle}>{item.title}</Text>
             </TouchableOpacity>
           ))}
         </View>
-
 
       </ScrollView>
     </SafeAreaView>
@@ -131,15 +149,12 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 6,
   },
-  menuIcon: {
-    fontSize: 40,
-    marginBottom: 10,
-  },
   menuTitle: {
     color: '#ffffff',
     fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginTop: 8,
   },
   statsContainer: {
     backgroundColor: '#ffffff',

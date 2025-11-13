@@ -226,7 +226,7 @@ function MainTabs() {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="ProfileStack"
         component={ProfileStack}
         options={{
@@ -236,7 +236,7 @@ function MainTabs() {
             <Icon name="person" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }

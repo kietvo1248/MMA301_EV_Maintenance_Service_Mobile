@@ -8,16 +8,17 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import { Ionicons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 import { useAuth } from '../../context/AuthContext';
 
 const HomeScreen = ({ navigation }) => {
   const menuItems = [
-    { id: 1, title: 'Quản lý xe', icon: '🚗', color: '#3498db' },
-    { id: 2, title: 'Đặt lịch', icon: '📅', color: '#e74c3c' },
-    { id: 3, title: 'Lịch sử bảo dưỡng', icon: '📋', color: '#f39c12' },
-    { id: 4, title: 'Tài khoản', icon: '👤', color: '#34495e' },
-    { id: 5, title: 'Đăng xuất', icon: '🚪', color: '#e67e22' },
-    { id: 6, title: 'Lịch sử lịch hẹn', icon: '📄', color: '#1abc9c' },
+    { id: 1, title: 'Quản lý xe', icon: 'car', iconSet: 'Ionicons', color: '#3498db' },
+    { id: 2, title: 'Đặt lịch', icon: 'calendar', iconSet: 'FontAwesome', color: '#e74c3c' },
+    // { id: 3, title: 'Lịch sử bảo dưỡng', icon: 'list-alt', iconSet: 'FontAwesome', color: '#f39c12' },
+    // { id: 4, title: 'Tài khoản', icon: 'person', iconSet: 'Ionicons', color: '#34495e' },
+    { id: 3, title: 'Đăng xuất', icon: 'logout', iconSet: 'MaterialIcons', color: '#e67e22' },
+    { id: 4, title: 'Lịch sử lịch hẹn', icon: 'history', iconSet: 'FontAwesome', color: '#1abc9c' },
   ];
 
   const { logout } = useAuth();
@@ -30,7 +31,6 @@ const HomeScreen = ({ navigation }) => {
     } else if (item.title === 'Đặt lịch') {
       navigation.navigate('BookAppointmentStack', { screen: 'BookAppointmentMain' });
     } else if (item.title === 'Lịch sử lịch hẹn') {
-      // ✅ Chuyển đến màn hình lịch sử, user sẽ chọn lịch hẹn muốn xem chi tiết
       navigation.navigate('AppointmentStack', { screen: 'AppointmentHistory' });
     } else {
       console.log(`Pressed: ${item.title}`);
@@ -40,9 +40,23 @@ const HomeScreen = ({ navigation }) => {
   const handleLogout = async () => {
     try {
       await logout();
-      // RootNavigator tự chuyển về LoginScreen
     } catch (error) {
       console.warn('Lỗi logout:', error);
+    }
+  };
+
+  const renderIcon = (iconSet, icon, color) => {
+    const iconProps = { size: 32, color: '#ffffff' };
+    
+    switch (iconSet) {
+      case 'Ionicons':
+        return <Ionicons name={icon} {...iconProps} />;
+      case 'MaterialIcons':
+        return <MaterialIcons name={icon} {...iconProps} />;
+      case 'FontAwesome':
+        return <FontAwesome name={icon} {...iconProps} />;
+      default:
+        return <Ionicons name="help-circle" {...iconProps} />;
     }
   };
 
@@ -65,7 +79,7 @@ const HomeScreen = ({ navigation }) => {
                 style={[styles.menuItem, { backgroundColor: item.color }]}
                 onPress={() => handleMenuPress(item)}
               >
-                <Text style={styles.menuIcon}>{item.icon}</Text>
+                {renderIcon(item.iconSet, item.icon, item.color)}
                 <Text style={styles.menuTitle}>{item.title}</Text>
               </TouchableOpacity>
             ))}
@@ -142,15 +156,12 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 6,
   },
-  menuIcon: {
-    fontSize: 40,
-    marginBottom: 10,
-  },
   menuTitle: {
     color: '#ffffff',
     fontSize: 14,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginTop: 8,
   },
   statsContainer: {
     backgroundColor: '#ffffff',
