@@ -7,6 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import LoginScreen from '../screens/LoginScreen';
 import StaffTabs from './StaffTabs';
 import TechnicianTabs from './TechnicianTabs';
+import CustomerTabs from './CustomerTabs';
 
 
 export default function RootNavigator() {
@@ -24,10 +25,9 @@ export default function RootNavigator() {
   return (
     <NavigationContainer>
       {!user && <LoginScreen />}
-
       {user && user.role === 'STAFF' && <StaffTabs />}
       {user && user.role === 'TECHNICIAN' && <TechnicianTabs />}
-      {user && user.role === 'ADMIN' && <AdminTabs />}
+      {user && user.role === 'CUSTOMER' && <CustomerTabs />}
     </NavigationContainer>
   );
 }
